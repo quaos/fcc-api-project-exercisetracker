@@ -67,7 +67,10 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
 
             resp.json({
                 ...user,
-                exercise: log,
+                description,
+                duration: log.duration,
+                date: log.date,
+                // exercise: log,
             });
         } catch (err) {
             next(err);

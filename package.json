@@ -8,7 +8,8 @@
 	},
 	"main": "server.js",
 	"scripts": {
-		"start": "node server.js"
+		"start": "node server.js",
+		"heroku-postbuild": "mkdir -p data"
 	},
 	"dependencies": {
 		"body-parser": "^1.19.0",

@@ -1,6 +1,6 @@
 .env
 node_modules
-data
+data/*.db
 
 .DS_Store
 **/.DS_Store

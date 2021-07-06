@@ -1,5 +1,8 @@
 // const { response } = require('express');
+const dateformat = require('dateformat');
 const express = require('express');
+
+const DATE_FORMAT = 'ddd mmm dd yyyy';
 
 function usersController(usersService, exerciseLogsService, opts = {}) {
     const router = new express.Router({ mergeParams: true });
@@ -8,7 +11,7 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
         try {
             const users = await usersService.findAllUsers();
             resp.json(users.map(u => ({
-                _id: u._id,
+                _id: `${u._id}`,
                 username: u.username,
             })));
         } catch (err) {
@@ -66,12 +69,14 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
             });
 
             resp.json({
-                ...user,
+                _id: `${user._id}`,
+                username: user.username,
                 description,
                 duration: log.duration,
-                date: log.date,
+                date: (log.date) ? dateformat(log.date, DATE_FORMAT) : undefined,
                 // exercise: log,
             });
+
         } catch (err) {
             next(err);
         }
@@ -91,19 +96,29 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
                 limit,
             } = req.query;
 
+            const filters = {
+                from: (from) ? new Date(from) : undefined,
+                to: (to) ? new Date(to) : undefined,
+                limit: (limit) ? Number(limit) : undefined,
+            };
+
             const logs = await exerciseLogsService.findLogs({
                 userId: user._id,
-                filters: { from, to, limit },
+                filters,
             });
 
             resp.json({
-                ...user,
+                _id: `${user._id}`,
+                username: user.username,
                 count: logs.length,
+                from: (filters.from) ? dateformat(filters.from, DATE_FORMAT) : undefined,
+                to: (filters.to) ? dateformat(filters.to, DATE_FORMAT) : undefined,
+                limit: filters.limit,
                 log: logs.map((log) => ({
-                    _id: log._id,
+                    _id: `${log._id}`,
                     description: log.description,
                     duration: log.duration,
-                    date: log.date,
+                    date: (log.date) ? dateformat(log.date, DATE_FORMAT) : undefined,
                 })),
             });
         } catch (err) {

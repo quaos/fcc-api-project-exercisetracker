@@ -51,8 +51,20 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
         try {
             const user = await usersService.getUser(req.params._id);
             if (!user) {
-                resp.json({ error: "user not found" });
+                const respBody = { error: "user not found" };
+                //TEST
+                console.log("reqBody:", req.body, " => respBody:", resp.body);
+                resp.json(respBody);
                 return;
+            }
+
+            for (let fld of ['description', 'duration']) {
+                if (!req.body[fld]) {
+                    resp.status(400);
+                    //Copy example response
+                    resp.send(`Path \`${fld}\` is required.`); //.json({ error: 'invalid duration' });
+                    return;
+                }
             }
 
             const {
@@ -64,19 +76,22 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
             const log = await exerciseLogsService.addLog({
                 userId: user._id,
                 description,
-                duration,
-                date,
+                duration: Number(duration),
+                date: (date) ? new Date(date) : undefined,
             });
 
-            resp.json({
+            const respBody = {
                 _id: `${user._id}`,
                 username: user.username,
-                description,
-                duration: log.duration,
                 date: (log.date) ? dateformat(log.date, DATE_FORMAT) : undefined,
+                duration: log.duration,
+                description,
                 // exercise: log,
-            });
+            };
+            //TEST
+            console.log("reqBody:", req.body, " => respBody:", resp.body);
 
+            resp.json(respBody);
         } catch (err) {
             next(err);
         }

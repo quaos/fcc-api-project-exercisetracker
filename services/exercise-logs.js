@@ -21,16 +21,16 @@ function exerciseLogsService(db, opts = {}) {
             }
             if (filters.from) {
                 filterSqlParts.push('date >= $from');
-                params.$from = new Date(filters.from).getTime();
+                params.$from = filters.from.getTime();
             }
             if (filters.to) {
                 filterSqlParts.push('date <= $to');
-                const t1 = new Date(filters.to);
+                const t1 = filters.to;
                 params.$to = new Date(t1.setDate(t1.getDate() + 1))
                     .setHours(0, 0, 0, 0);
             }
             if (filters.limit) {
-                params.$limit = Number(filters.limit);
+                params.$limit = filters.limit;
             }
 
             const sql = 'SELECT _id, description, duration, date, user_id'
@@ -55,8 +55,8 @@ function exerciseLogsService(db, opts = {}) {
                 + ' VALUES ($description, $duration, $date, $userId)';
             console.log('SQL:', sql);
 
-            const duration = Number(log.duration);
-            const date = (log.date) ? new Date(log.date) : new Date();
+            const duration = log.duration;
+            const date = log.date || new Date();
             const params = {
                 $description: log.description,
                 $duration: duration,

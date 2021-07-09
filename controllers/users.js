@@ -81,12 +81,11 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
             });
 
             const respBody = {
-                _id: `${user._id}`,
                 username: user.username,
-                date: (log.date) ? dateformat(log.date, DATE_FORMAT) : undefined,
-                duration: log.duration,
                 description,
-                // exercise: log,
+                duration: log.duration,
+                _id: `${user._id}`,
+                date: (log.date) ? dateformat(log.date, DATE_FORMAT) : undefined,
             };
             //TEST
             console.log("reqBody:", req.body, " => respBody:", respBody);

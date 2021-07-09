@@ -1,3 +1,4 @@
+const ObjectID = require('mongodb').ObjectID;
 // const util = require('util');
 
 function usersService(db, opts = {}) {
@@ -25,14 +26,18 @@ function usersService(db, opts = {}) {
         },
 
         addUser: async (user) => {
-            const result = await db.run('INSERT INTO users(username) VALUES ($username)', {
+            // Need this format to pass challenge's test
+            user._id = new ObjectID();
+
+            const result = await db.run('INSERT INTO users(_id, username) VALUES ($_id, $username)', {
+                $_id: user._id,
                 $username: user.username
             });
-            console.info(`Inserted user#${result.lastID}`);
+            console.info(`Inserted user#${user._id}:`, result); // ${result.lastID}
 
             return {
                 ...user,
-                _id: result.lastID,
+                // _id: result.lastID,
             }
         },
     }

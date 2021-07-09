@@ -6,7 +6,7 @@ async function initDB(db, opts = {}) {
 
     await db.run(
         'CREATE TABLE IF NOT EXISTS users('
-        + '_id INTEGER PRIMARY KEY'
+        + '_id TEXT PRIMARY KEY'
         + ', username TEXT)'
     );
 

@@ -53,7 +53,7 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
             if (!user) {
                 const respBody = { error: "user not found" };
                 //TEST
-                console.log("reqBody:", req.body, " => respBody:", resp.body);
+                console.log("reqBody:", req.body, " => respBody:", respBody);
                 resp.json(respBody);
                 return;
             }
@@ -89,7 +89,7 @@ function usersController(usersService, exerciseLogsService, opts = {}) {
                 // exercise: log,
             };
             //TEST
-            console.log("reqBody:", req.body, " => respBody:", resp.body);
+            console.log("reqBody:", req.body, " => respBody:", respBody);
 
             resp.json(respBody);
         } catch (err) {
